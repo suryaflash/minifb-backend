@@ -83,6 +83,10 @@ app.post('/acceptfriend', jwtvar.verifyToken, (request, response) => {
     });
 });
 
+app.get('/', function (request, response) {
+    response.send("backend is running ****");
+});
+
 app.post('/rejectfriend', jwtvar.verifyToken, (request, response) => {
     const data = request.body;
     const authData = (jwtvar.verification(request, response));
