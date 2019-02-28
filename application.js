@@ -180,16 +180,11 @@ app.post('/friendRequest', jwtvar.verifyToken, (request, response) => {
       {
         if(error)
             console.log("error:",error);
-        // else 
-            // console.log("EMAIL IS SENT RAA");
       })
 });
 
-// app.get('/find',(req,res)=>{
-//     res.json({msg:req.header,a:"sdfsfs"})
-// })
+
 app.get('/find', jwtvar.verifyToken, (request, response) => {
-    // console.log(request.headers)
     const authData = (jwtvar.verification(request, response));
     var qq = `select * from register where mail_id != '${authData.user[0].mail_id}' and show_me = 1 and (mail_id not in (select to_email from friend_request where from_email='${authData.user[0].mail_id}' UNION select from_email from friend_request where to_email='${authData.user[0].mail_id}'))`;
     dbase.query(qq, function (err, users) {
@@ -223,16 +218,16 @@ app.get('/ourfriends', jwtvar.verifyToken, (request, response) => {
     var sql = `SELECT email from friend_table where accept_email='${authData.user[0].mail_id}' union select accept_email from friend_table where email='${authData.user[0].mail_id}'`;
     dbase.query(sql, function (err, result) {
         if (err) throw err;
-        // console.log(result);
         response.send(result);
     });
 });
     
 
-app.post('/searchFriend', (request, response) => {
+app.post('/searchFriend', jwtvar.verifyToken, (request, response) => {
     const data = request.body;
-    var sql = `SELECT mail_id from register where show_me = 1 and mail_id like '%${data.searchitem}%'`;
-    dbase.query(sql, function (err, result) {
+    const authData = (jwtvar.verification(request, response));
+    var qq = `select * from register where mail_id != '${authData.user[0].mail_id}' and show_me = 1 and mail_id like '%${data.searchitem}%' and (mail_id not in (select to_email from friend_request where from_email='${authData.user[0].mail_id}' UNION select from_email from friend_request where to_email='${authData.user[0].mail_id}')) `;
+    dbase.query(qq, function (err, result) {
         if (err) throw err;
         response.send(result);
     });
