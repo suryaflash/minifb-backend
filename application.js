@@ -160,8 +160,8 @@ app.post('/friendRequest', jwtvar.verifyToken, (request, response) => {
         port: 465,
         secure: true, 
         auth: {
-          user: 'surya@codingmart.com', 
-          pass: 'steam133'
+          user: '[YOUR EMAIL ID]', 
+          pass: '[YOUR PASSWORD]'
         },
         tls:{
             rejectUnauthorized:false,
